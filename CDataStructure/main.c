@@ -1,15 +1,26 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "utarray.h"
 #include "utstring.h"
+#include "uthash.h"
+typedef struct {
+  int id;
+  char name[10];
+  UT_hash_handle hh;
+} User;
+
 void Array_demo();//Array的用法模板
 void string_demo();//字符串的用法模板
-
-
+void hash_demo();//哈希表的用法模板
+void addUser(User **users,int id,char *name);//hash表的添加元素
+User *findUser(User **users,int id);//hash表的查找元素
 int main() {
   
     
-    Array_demo();
-    string_demo();
+    //Array_demo();
+    //string_demo();
+    hash_demo();
   return 0;
 }
 
@@ -105,4 +116,31 @@ void string_demo()
     printf("%s\n",utstring_body(s));//输出字符串
     
     utstring_free(s);//释放内存
+}
+
+
+void hash_demo()
+{
+
+  User *users =NULL;//定义一个指针用于指向哈希表和管理它
+  addUser(&users,1,"tom");
+  addUser(&users,2,"jerry");
+  User *user_temp=findUser(&users,1);
+  printf("user_temp:%s\n",user_temp->name);
+
+}
+
+void addUser(User **users,int id,char *name)
+{
+
+  User *user = (User*)malloc(sizeof(User));
+  user->id = id;
+  strcpy(user->name,name);
+  HASH_ADD_INT(*users,id,user);
+}
+User *findUser(User **users,int id)
+{
+  User *user;
+  HASH_FIND_INT(*users,&id,user);
+  return user;
 }
